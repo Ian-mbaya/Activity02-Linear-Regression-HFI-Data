@@ -321,7 +321,7 @@ Answer the following question:
 
 - In the code chunk below titled `residual-histogram`, replace "verbatim" with "r" just before the code chunk title. 
  
-```{verbatim fitted-residual}
+```{verbatim residual-histogram}
 ggplot(data = train_aug, aes(x = .resid)) +
   geom_histogram(binwidth = 0.25) +
   xlab("Residuals")
