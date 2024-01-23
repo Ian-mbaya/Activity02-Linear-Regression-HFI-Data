@@ -43,8 +43,8 @@ If you would like to try the *ISLR* labs using these two packages instead of bas
   
 - Run the `setup` code chunk and/or **knit** <img src="../README-img/knit-icon.png" alt="knit" width = "20"/> icon your Rmd document to verify that no errors occur.
 
-```{r setup}
-
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
 ```
 
 ![check-in](../README-img/noun-magnifying-glass.png) **Check in**
@@ -65,6 +65,10 @@ After doing this and viewing the loaded data, answer the following questions:
 
 1. What are the dimensions of the dataset?
   What does each row represent?
+```{r load-data}
+hfi <- read.csv('hfi.csv')
+```
+  
 
 The dataset spans a lot of years.
 We are only interested in data from year 2016.
@@ -74,7 +78,7 @@ In the R code chunk below titled `hfi-2016`, type the code that does the followi
 - Assigns the result to a data frame named `hfi_2016`.
 
 ```{r hfi-2016}
-
+hfi_2016 <- hfi %>% filter(year == 2016)
 ```
 
 ### 1. Identify our research question(s)
@@ -98,8 +102,11 @@ Answer the following questions (use your markdown skills) and complete the follo
 - In the R code chunk below titled `univariable-plots`, type the R code that displays this plot for `pf_expression_control`.
 
 ```{r distribution-plots}
-
+hist(hf1_2016$pf_score)
+hist(hf1_2016$pf_expression_control)
 ```
+
+
 
 4. Comment on each of these two distributions. 
   Be sure to describe their centers, spread, shape, and any potential outliers.
@@ -113,7 +120,14 @@ Answer the following questions (use your markdown skills) and complete the follo
 - In the R code chunk below titled `relationship-plot`, plot this relationship using the variable `pf_expression_control` as the predictor/explanatory variable.
 
 ```{r relationship-plot}
+# Scatterplot
+attach(hf1_2016)
+plot(pf_expression_control, pf_score, main="Scatterplot Pf_core against pf_expression_control",
+   xlab="PF Score", ylab="Pf Expression Control", pch=19)
 
+# Add a regression line
+regression_model <- lm(pf_score ~ pf_expression_control)
+abline(regression_model, col="red")
 ```
 
 4. Does the relationship look linear?
@@ -130,7 +144,10 @@ What numerical summary would you use to describe the relationship between two nu
 (hint: explore the `cor` function from Base R)
 
 ```{r challenge}
-
+hf1_2016 %>% select(pf_score, pf_expression_control) %>% cor()
+```
+```{r}
+hf1_2016 %>% summarise(r = cor(pf_score, pf_expression_control))
 ```
 
 
@@ -144,7 +161,7 @@ To begin, we will create a `{parsnip}` specification for a linear model.
 
 - In the code chunk below titled `parsnip-spec`, replace "verbatim" with "r" just before the code chunk title.
 
-```{verbatim parsnip-spec}
+```{r parsnip-spec}
 lm_spec <- linear_reg() %>%
   set_mode("regression") %>%
   set_engine("lm")
@@ -166,11 +183,11 @@ Look at your knitted document to see how this syntax appears.
 
 - In the code chunk below titled `fit-lm`, replace "verbatim" with "r" just before the code chunk title. 
 
-```{verbatim fit-lm}
+```{r fit-lm}
 slr_mod <- lm_spec %>% 
   fit(pf_score ~ pf_expression_control, data = hfi_2016)
 
-tidy(slr_mod)
+broom::tidy(slr_mod)
 ```
 
 The above code fits our SLR model, then provides a `tidy` parameter estimates table.
@@ -178,7 +195,7 @@ The above code fits our SLR model, then provides a `tidy` parameter estimates ta
 5. Using the `tidy` output, update the below formula with the estimated parameters.
   That is, replace "intercept" and "slope" with the appropriate values
 
-$\hat{\texttt{pf\score}} = intercept + slope \times \texttt{pf\_expression\_control}$
+$\hat{\texttt{pf\score}} = 4.2838 + 0.5418 \times \texttt{pf\_expression\_control}$
 
 
 6. Interpret each of the estimated parameters from (5) in the context of this research question.
@@ -201,7 +218,7 @@ We use `glance` from  `{broom}` (which is automatically loaded with `{tidymodels
 
 - In the code chunk below titled `glance-lm`, replace "verbatim" with "r" just before the code chunk title. 
 
-```{verbatim glance-mod}
+```{r glance-mod}
 glance(slr_mod)
 ```
 
@@ -209,13 +226,13 @@ After doing this and running the code, answer the following questions:
 
 7. What is the value of $R^2$ for this model?
 
-
+0.7141
 
 8. What does this value mean in the context of this model?
   Think about what would a "good" value of $R^2$ would be?
   Can/should this value be "perfect"?
 
-
+  71.41% variation in pf_score can be explained by  pf_expression_control
 
 #### 4.B: Assess with test/train
 
@@ -321,7 +338,7 @@ Answer the following question:
 
 - In the code chunk below titled `residual-histogram`, replace "verbatim" with "r" just before the code chunk title. 
  
-```{verbatim fitted-residual}
+```{verbatim residual-histogram}
 ggplot(data = train_aug, aes(x = .resid)) +
   geom_histogram(binwidth = 0.25) +
   xlab("Residuals")
