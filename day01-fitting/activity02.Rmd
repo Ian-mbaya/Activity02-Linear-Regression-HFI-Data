@@ -347,7 +347,7 @@ In order to do these checks we need access to the fitted (predicted) values and 
 -   In the code chunk below titled `fitted-residual`, replace "verbatim" with "r" just before the code chunk title.
 
 ```{r fitted-residual}
-ggplot(data = test_aug, aes(x = .fitted, y = .resid)) +
+ggplot(data = test_aug, aes(x = .pred, y = .resid)) +
   geom_point() +
   geom_hline(yintercept = 0, linetype = "dashed", color = "red") +
   xlab("Fitted values") +
@@ -374,11 +374,12 @@ Answer the following question:
 
 12. Based on the histogram, does the nearly normal residuals condition appear to be violated? Why or why not?
 
-**Constant variability**: Yes violated
+**Constant variability**: Yes violated, data doesnt appaer to be following a normal distribution
 
 13. Based on the residuals vs. fitted plot, does the constant variability condition appear to be violated? Why or why not? 
+Not Violated - points  are even distributed  with a mean of zero.
 
-## Attribution Yes violated
+## Attribution 
 
 This document is based on labs from [OpenIntro](https://www.openintro.org/).
 
