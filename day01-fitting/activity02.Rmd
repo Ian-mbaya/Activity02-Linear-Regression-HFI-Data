@@ -374,7 +374,7 @@ Answer the following question:
 
 12. Based on the histogram, does the nearly normal residuals condition appear to be violated? Why or why not?
 
-**Constant variability**: Yes violated, data doesnt appaer to be following a normal distribution
+**Constant variability**: Yes violated, data doesnt appear to be following a normal distribution
 
 13. Based on the residuals vs. fitted plot, does the constant variability condition appear to be violated? Why or why not? 
 Not Violated - points  are even distributed  with a mean of zero.
